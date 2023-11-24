@@ -57,6 +57,7 @@
         name="Sale Order Types"
         parent="sale.menu_sale_config"
         action="sale_order_type_action"
+        groups="sale_order_type_group"
         sequence="10"
     />
 
