@@ -13,4 +13,43 @@
         </xpath>
     </field>
 </record>
+
+<record id="sale.menu_sale_order_invoice" model="ir.ui.menu">
+    <field name="groups_id" eval="[(6, 0, [ref('original_sale_group')])]" />
+</record>
+
+<record id="sale.menu_sale_order_upselling" model="ir.ui.menu">
+    <field name="groups_id" eval="[(6, 0, [ref('original_sale_group')])]" />
+</record>
+
+<record id="sale.menu_sale_quotations" model="ir.ui.menu">
+    <field name="groups_id" eval="[(6, 0, [ref('original_sale_group')])]" />
+</record>
+
+<record id="sale.menu_sale_order" model="ir.ui.menu">
+    <field name="groups_id" eval="[(6, 0, [ref('original_sale_group')])]" />
+</record>
+
+<record id="sale.report_sales_team" model="ir.ui.menu">
+    <field name="groups_id" eval="[(6, 0, [ref('original_sale_group')])]" />
+</record>
+
+<record id="sale_order_action" model="ir.actions.act_window">
+    <field name="name">Sales Orders</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">sale.order</field>
+    <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale" />
+    <field name="domain">[]</field>
+    <field name="context">{}</field>
+</record>
+
+    <menuitem
+        id="sale_order_menu"
+        name="Sale Orders"
+        parent="sale.sale_order_menu"
+        action="sale_order_action"
+        groups="sale_order_viewer_group"
+        sequence="110"
+    />
 </odoo>
