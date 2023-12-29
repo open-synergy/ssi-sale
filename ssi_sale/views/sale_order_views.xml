@@ -11,6 +11,18 @@
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
             <field name="type_id" options="{'no_open': True, 'no_create': True}" />
         </xpath>
+        <xpath
+                expr="//group[@name='order_details']/div[@class='o_td_label'][1]"
+                position="attributes"
+            >
+            <attribute name="groups" />
+        </xpath>
+        <xpath
+                expr="//group[@name='order_details']/field[@name='date_order'][1]"
+                position="attributes"
+            >
+            <attribute name="groups" />
+        </xpath>
     </field>
 </record>
 
