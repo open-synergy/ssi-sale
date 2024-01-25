@@ -5,4 +5,5 @@
 from . import (
     sale_order_type,
     sale_order,
+    sale_order_line,
 )
