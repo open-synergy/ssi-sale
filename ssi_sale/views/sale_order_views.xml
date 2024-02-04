@@ -8,6 +8,30 @@
     <field name="model">sale.order</field>
     <field name="inherit_id" ref="sale.view_order_form" />
     <field name="arch" type="xml">
+        <xpath expr="//button[@name='payment_action_capture']" position="attributes">
+            <attribute name="attrs">{'invisible': [('capture_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//button[@name='payment_action_void']" position="attributes">
+            <attribute name="attrs">{'invisible': [('void_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][1]" position="attributes">
+            <attribute name="attrs">{'invisible': ['|', ('invoice_status', '!=', 'to invoice'), ('invoice_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]" position="attributes">
+            <attribute name="attrs">{'invisible': ['|', '|', ('invoice_status', '!=', 'no'), ('state', '!=', 'sale'), ('invoice_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_quotation_send'][1]" position="attributes">
+            <attribute name="attrs">{'invisible': ['|', ('email_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_quotation_send'][2]" position="attributes">
+            <attribute name="attrs">{'invisible': ['|', ('state', '!=', 'draft'), ('email_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_quotation_send'][3]" position="attributes">
+            <attribute name="attrs">{'invisible': ['|', ('state', '=', 'draft'), ('email_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_quotation_send'][4]" position="attributes">
+            <attribute name="attrs">{'invisible': ['|', ('email_ok', '!=', True)]}</attribute>
+        </xpath>
         <xpath expr="//button[@name='action_confirm']" position="attributes">
             <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ['sent']), ('confirm_ok', '!=', True)]}</attribute>
         </xpath>
@@ -15,11 +39,12 @@
             <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ['draft']), ('confirm_ok', '!=', True)]}</attribute>
         </xpath>
         <xpath expr="//button[@name='action_cancel']" position="attributes">
-            <attribute name="attrs">{'invisible': ['|', '|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False), ('cancel_ok', '!=', True)]}</attribute>
+            <attribute name="states"></attribute>
+            <attribute name="attrs">{'invisible': [('cancel_ok', '!=', True)]}</attribute>
         </xpath>
         <xpath expr="//button[@name='action_draft']" position="attributes">
             <attribute name="states"></attribute>
-            <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ['cancel']), ('draft_ok', '!=', True)]}</attribute>
+            <attribute name="attrs">{'invisible': [('draft_ok', '!=', True)]}</attribute>
         </xpath>
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
             <field name="type_id" options="{'no_open': True, 'no_create': True}" />
@@ -49,9 +74,13 @@
                         />
                 </group>
                 <group name="policy_2" colspan="4" col="2">
-                    <field name="confirm_ok" order="97" />
-                    <field name="cancel_ok" order="98" />
-                    <field name="draft_ok" order="99" />
+                    <field name="capture_ok"/>
+                    <field name="void_ok"/>
+                    <field name="invoice_ok"/>
+                    <field name="email_ok"/>
+                    <field name="confirm_ok"/>
+                    <field name="cancel_ok"/>
+                    <field name="draft_ok"/>
                 </group>
             </page>
         </xpath>

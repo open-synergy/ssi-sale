@@ -14,6 +14,69 @@
     <field name="sequence" eval="100" />
     <field name="python_code">result=True</field>
 </record>
+<record id="policy_template_sale_order_capture" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','capture_ok')]"
+            />
+    <field name="restrict_state" eval="0" />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+                name="group_ids"
+                eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
+            />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = document.authorized_transaction_ids</field>
+</record>
+<record id="policy_template_sale_order_void" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','void_ok')]"
+            />
+    <field name="restrict_state" eval="0" />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+                name="group_ids"
+                eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
+            />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = document.authorized_transaction_ids</field>
+</record>
+<record id="policy_template_sale_order_invoice" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','invoice_ok')]"
+            />
+    <field name="restrict_state" eval="0" />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+                name="group_ids"
+                eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
+            />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = document.invoice_status in ['to invoice','no']</field>
+</record>
+<record id="policy_template_sale_order_email" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','email_ok')]"
+            />
+    <field name="restrict_state" eval="0" />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+                name="group_ids"
+                eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
+            />
+    <field name="restrict_additional" eval="0" />
+</record>
 <record id="policy_template_sale_order_confirm" model="policy.template_detail">
     <field name="template_id" ref="policy_template_sale_order" />
     <field
@@ -50,7 +113,8 @@
                 name="group_ids"
                 eval="[(6,0,[ref('ssi_sale.sale_order_validator_group')])]"
             />
-    <field name="restrict_additional" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = document.id</field>
 </record>
 <record id="policy_template_sale_order_draft" model="policy.template_detail">
     <field name="template_id" ref="policy_template_sale_order" />

@@ -26,6 +26,26 @@ class SaleOrder(models.Model):
             "draft": [("readonly", False)],
         },
     )
+    capture_ok = fields.Boolean(
+        string="Can Capture Transaction",
+        compute="_compute_policy",
+        default=False,
+    )
+    void_ok = fields.Boolean(
+        string="Can Void Transaction",
+        compute="_compute_policy",
+        default=False,
+    )
+    invoice_ok = fields.Boolean(
+        string="Can Create Invoice",
+        compute="_compute_policy",
+        default=False,
+    )
+    email_ok = fields.Boolean(
+        string="Can Send by Email",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
     confirm_ok = fields.Boolean(
         string="Can Confirm",
         compute="_compute_policy",
@@ -46,6 +66,10 @@ class SaleOrder(models.Model):
     def _get_policy_field(self):
         res = super(SaleOrder, self)._get_policy_field()
         policy_field = [
+            "capture_ok",
+            "void_ok",
+            "invoice_ok",
+            "email_ok",
             "confirm_ok",
             "cancel_ok",
             "draft_ok",
