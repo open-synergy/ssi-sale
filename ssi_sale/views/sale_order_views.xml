@@ -10,6 +10,10 @@
     <field name="arch" type="xml">
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
             <field name="type_id" options="{'no_open': True, 'no_create': True}" />
+            <field name="allowed_pricelist_ids" invisible="1"/>
+        </xpath>
+        <xpath expr="//field[@name='pricelist_id']" position="attributes">
+            <attribute name="domain">[('id', 'in', allowed_pricelist_ids)]</attribute>
         </xpath>
         <xpath
                 expr="//group[@name='order_details']/div[@class='o_td_label'][1]"
