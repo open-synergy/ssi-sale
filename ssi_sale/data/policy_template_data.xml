@@ -60,13 +60,32 @@
                 eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
             />
     <field name="restrict_additional" eval="1" />
-    <field name="additional_python_code">result = document.invoice_status in ['to invoice','no']</field>
+    <field name="additional_python_code">result = document.invoice_status == 'to invoice' or (document.invoice_status == 'no' and document.state == 'sale')</field>
 </record>
 <record id="policy_template_sale_order_email" model="policy.template_detail">
     <field name="template_id" ref="policy_template_sale_order" />
     <field
                 name="field_id"
                 search="[('model_id.model','=','sale.order'),('name','=','email_ok')]"
+            />
+    <field name="restrict_state" eval="1" />
+    <field
+                name="state_ids"
+                search="[('field_id.model_id.model','=','sale.order'),('value','in',['draft','sent','sale'])]"
+            />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+                name="group_ids"
+                eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
+            />
+    <field name="restrict_additional" eval="0" />
+</record>
+<record id="policy_template_sale_order_proforma" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','proforma_ok')]"
             />
     <field name="restrict_state" eval="0" />
     <field name="restrict_user" eval="1" />
@@ -75,7 +94,8 @@
                 name="group_ids"
                 eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
             />
-    <field name="restrict_additional" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = not document.invoice_count</field>
 </record>
 <record id="policy_template_sale_order_confirm" model="policy.template_detail">
     <field name="template_id" ref="policy_template_sale_order" />
@@ -132,6 +152,44 @@
     <field
                 name="group_ids"
                 eval="[(6,0,[ref('ssi_sale.sale_order_validator_group')])]"
+            />
+    <field name="restrict_additional" eval="0" />
+</record>
+<record id="policy_template_sale_order_done" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','done_ok')]"
+            />
+    <field name="restrict_state" eval="1" />
+    <field
+                name="state_ids"
+                search="[('field_id.model_id.model','=','sale.order'),('value','=','sale')]"
+            />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+                name="group_ids"
+                eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
+            />
+    <field name="restrict_additional" eval="0" />
+</record>
+<record id="policy_template_sale_order_unlock" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','unlock_ok')]"
+            />
+    <field name="restrict_state" eval="1" />
+    <field
+                name="state_ids"
+                search="[('field_id.model_id.model','=','sale.order'),('value','=','done')]"
+            />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field
+                name="group_ids"
+                eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]"
             />
     <field name="restrict_additional" eval="0" />
 </record>

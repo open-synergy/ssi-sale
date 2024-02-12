@@ -2,7 +2,10 @@
 # Copyright 2023 PT. Simetri Sinergi Indonesia
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from . import models
+from . import (
+    models,
+    wizard,
+)
 
 from .hooks import (
     pre_init_hook,

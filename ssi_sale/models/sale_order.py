@@ -46,6 +46,11 @@ class SaleOrder(models.Model):
         compute="_compute_policy",
         compute_sudo=True,
     )
+    proforma_ok = fields.Boolean(
+        string="Can Send PRO-FORMA Invoice",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
     confirm_ok = fields.Boolean(
         string="Can Confirm",
         compute="_compute_policy",
@@ -61,6 +66,16 @@ class SaleOrder(models.Model):
         compute="_compute_policy",
         compute_sudo=True,
     )
+    done_ok = fields.Boolean(
+        string="Can Lock",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
+    unlock_ok = fields.Boolean(
+        string="Can Unlock",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
 
     @api.model
     def _get_policy_field(self):
@@ -70,9 +85,12 @@ class SaleOrder(models.Model):
             "void_ok",
             "invoice_ok",
             "email_ok",
+            "proforma_ok",
             "confirm_ok",
             "cancel_ok",
             "draft_ok",
+            "done_ok",
+            "unlock_ok",
         ]
         res += policy_field
         return res
