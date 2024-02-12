@@ -29,17 +29,17 @@ class SaleOrder(models.Model):
     capture_ok = fields.Boolean(
         string="Can Capture Transaction",
         compute="_compute_policy",
-        default=False,
+        compute_sudo=True,
     )
     void_ok = fields.Boolean(
         string="Can Void Transaction",
         compute="_compute_policy",
-        default=False,
+        compute_sudo=True,
     )
     invoice_ok = fields.Boolean(
         string="Can Create Invoice",
         compute="_compute_policy",
-        default=False,
+        compute_sudo=True,
     )
     email_ok = fields.Boolean(
         string="Can Send by Email",
@@ -54,7 +54,7 @@ class SaleOrder(models.Model):
     confirm_ok = fields.Boolean(
         string="Can Confirm",
         compute="_compute_policy",
-        default=False,
+        compute_sudo=True,
     )
     cancel_ok = fields.Boolean(
         string="Can Cancel",
