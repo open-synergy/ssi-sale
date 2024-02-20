@@ -9,27 +9,41 @@
     <field name="inherit_id" ref="sale.view_order_form" />
     <field name="arch" type="xml">
         <xpath expr="//button[@name='payment_action_capture']" position="attributes">
-            <attribute name="attrs">{'invisible': [('capture_ok', '!=', True)]}</attribute>
+            <attribute
+                    name="attrs"
+                >{'invisible': [('capture_ok', '!=', True)]}</attribute>
         </xpath>
         <xpath expr="//button[@name='payment_action_void']" position="attributes">
             <attribute name="attrs">{'invisible': [('void_ok', '!=', True)]}</attribute>
         </xpath>
-        <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][1]" position="attributes">
-            <attribute name="attrs">{'invisible': [('invoice_ok', '!=', True)]}</attribute>
+        <xpath
+                expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][1]"
+                position="attributes"
+            >
+            <attribute
+                    name="attrs"
+                >{'invisible': [('invoice_ok', '!=', True)]}</attribute>
             <attribute name="context">{'invoice_status': invoice_status}</attribute>
         </xpath>
-        <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]" position="attributes">
+        <xpath
+                expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]"
+                position="attributes"
+            >
             <attribute name="invisible">1</attribute>
         </xpath>
         <xpath expr="//button[@name='action_quotation_send'][1]" position="attributes">
-            <attribute name="attrs">{'invisible': [('email_ok', '!=', True)]}</attribute>
-            <attribute name="states"></attribute>
-            <attribute name="class"></attribute>
+            <attribute
+                    name="attrs"
+                >{'invisible': [('email_ok', '!=', True)]}</attribute>
+            <attribute name="states" />
+            <attribute name="class" />
         </xpath>
         <xpath expr="//button[@name='action_quotation_send'][2]" position="attributes">
-            <attribute name="attrs">{'invisible': [('proforma_ok', '!=', True)]}</attribute>
-            <attribute name="states"></attribute>
-            <attribute name="class"></attribute>
+            <attribute
+                    name="attrs"
+                >{'invisible': [('proforma_ok', '!=', True)]}</attribute>
+            <attribute name="states" />
+            <attribute name="class" />
         </xpath>
         <xpath expr="//button[@name='action_quotation_send'][3]" position="attributes">
             <attribute name="invisible">1</attribute>
@@ -38,18 +52,24 @@
             <attribute name="invisible">1</attribute>
         </xpath>
         <xpath expr="//button[@name='action_confirm']" position="attributes">
-            <attribute name="attrs">{'invisible': [('confirm_ok', '!=', True)]}</attribute>
+            <attribute
+                    name="attrs"
+                >{'invisible': [('confirm_ok', '!=', True)]}</attribute>
         </xpath>
         <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
         <xpath expr="//button[@name='action_cancel']" position="attributes">
-            <attribute name="states"></attribute>
-            <attribute name="attrs">{'invisible': [('cancel_ok', '!=', True)]}</attribute>
+            <attribute name="states" />
+            <attribute
+                    name="attrs"
+                >{'invisible': [('cancel_ok', '!=', True)]}</attribute>
         </xpath>
         <xpath expr="//button[@name='action_draft']" position="attributes">
-            <attribute name="states"></attribute>
-            <attribute name="attrs">{'invisible': [('draft_ok', '!=', True)]}</attribute>
+            <attribute name="states" />
+            <attribute
+                    name="attrs"
+                >{'invisible': [('draft_ok', '!=', True)]}</attribute>
         </xpath>
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
             <field name="type_id" options="{'no_open': True, 'no_create': True}" />
@@ -79,16 +99,16 @@
                         />
                 </group>
                 <group name="policy_2" colspan="4" col="2">
-                    <field name="capture_ok"/>
-                    <field name="void_ok"/>
-                    <field name="invoice_ok"/>
-                    <field name="email_ok"/>
-                    <field name="proforma_ok"/>
-                    <field name="confirm_ok"/>
-                    <field name="cancel_ok"/>
-                    <field name="draft_ok"/>
-                    <field name="done_ok"/>
-                    <field name="unlock_ok"/>
+                    <field name="capture_ok" />
+                    <field name="void_ok" />
+                    <field name="invoice_ok" />
+                    <field name="email_ok" />
+                    <field name="proforma_ok" />
+                    <field name="confirm_ok" />
+                    <field name="cancel_ok" />
+                    <field name="draft_ok" />
+                    <field name="done_ok" />
+                    <field name="unlock_ok" />
                 </group>
             </page>
         </xpath>
@@ -100,16 +120,18 @@
     <field name="inherit_id" ref="sale.view_sales_order_auto_done_setting" />
     <field name="arch" type="xml">
         <xpath expr="//button[@name='action_done']" position="after">
-            <field name="done_ok" invisible="1"/>
-            <field name="unlock_ok" invisible="1"/>
+            <field name="done_ok" invisible="1" />
+            <field name="unlock_ok" invisible="1" />
         </xpath>
         <xpath expr="//button[@name='action_done']" position="attributes">
             <attribute name="attrs">{'invisible': [('done_ok', '!=', True)]}</attribute>
-            <attribute name="states"></attribute>
+            <attribute name="states" />
         </xpath>
         <xpath expr="//button[@name='action_unlock']" position="attributes">
-            <attribute name="attrs">{'invisible': [('unlock_ok', '!=', True)]}</attribute>
-            <attribute name="states"></attribute>
+            <attribute
+                    name="attrs"
+                >{'invisible': [('unlock_ok', '!=', True)]}</attribute>
+            <attribute name="states" />
         </xpath>
     </field>
 </record>
