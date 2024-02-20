@@ -12,6 +12,7 @@
     "application": True,
     "depends": [
         "sale_management",
+        "ssi_policy_mixin",
         "ssi_master_data_mixin",
     ],
     "data": [
@@ -19,6 +20,7 @@
         "security/res_group_data.xml",
         "security/ir.model.access.csv",
         "data/sale_order_type.xml",
+        "data/policy_template_data.xml",
         "views/sale_order_views.xml",
         "views/sale_order_type_views.xml",
         "views/res_partner_views.xml",
