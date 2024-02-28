@@ -43,29 +43,34 @@
             <data>
                 <xpath expr="//page[@name='note']" position="before">
                     <page name="pricelist" string="Pricelist">
-                        <group name="pricelist_1" col="2" colspan="4" string="Pricelist">
+                        <group
+                            name="pricelist_1"
+                            col="2"
+                            colspan="4"
+                            string="Pricelist"
+                        >
                             <field
-                                    name="pricelist_selection_method"
-                                    string="Selection Method"
-                                />
+                                name="pricelist_selection_method"
+                                string="Selection Method"
+                            />
                             <field
-                                    name="pricelist_ids"
-                                    attrs="{'invisible':[('pricelist_selection_method','!=','manual')]}"
-                                    string="Pricelists"
-                                />
+                                name="pricelist_ids"
+                                attrs="{'invisible':[('pricelist_selection_method','!=','manual')]}"
+                                string="Pricelists"
+                            />
                             <field
-                                    name="pricelist_domain"
-                                    widget="domain"
-                                    options="{'model': 'product.pricelist', 'in_dialog': True}"
-                                    attrs="{'invisible':[('pricelist_selection_method','!=','domain')]}"
-                                    string="Domain"
-                                />
+                                name="pricelist_domain"
+                                widget="domain"
+                                options="{'model': 'product.pricelist', 'in_dialog': True}"
+                                attrs="{'invisible':[('pricelist_selection_method','!=','domain')]}"
+                                string="Domain"
+                            />
                             <field
-                                    name="pricelist_python_code"
-                                    widget="ace"
-                                    attrs="{'invisible':[('pricelist_selection_method','!=','code')]}"
-                                    string="Python Code"
-                                />
+                                name="pricelist_python_code"
+                                widget="ace"
+                                attrs="{'invisible':[('pricelist_selection_method','!=','code')]}"
+                                string="Python Code"
+                            />
                         </group>
                     </page>
                 </xpath>
