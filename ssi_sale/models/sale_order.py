@@ -123,4 +123,5 @@ class SaleOrder(models.Model):
         "type_id",
     )
     def onchange_pricelist_id(self):
-        self.pricelist_id = False
+        if self.user_has_groups("product.group_product_pricelist"):
+            self.pricelist_id = False
