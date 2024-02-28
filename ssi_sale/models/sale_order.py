@@ -10,11 +10,36 @@ class SaleOrder(models.Model):
     _inherit = [
         "sale.order",
         "mixin.policy",
+        "mixin.many2one_configurator",
     ]
 
     def _compute_policy(self):
         _super = super(SaleOrder, self)
         _super._compute_policy()
+
+    @api.depends(
+        "type_id",
+    )
+    def _compute_allowed_pricelist_ids(self):
+        for record in self:
+            result = False
+            if record.type_id:
+                result = record._m2o_configurator_get_filter(
+                    object_name="product.pricelist",
+                    method_selection=record.type_id.pricelist_selection_method,
+                    manual_recordset=record.type_id.pricelist_ids,
+                    domain=record.type_id.pricelist_domain,
+                    python_code=record.type_id.pricelist_python_code,
+                )
+            record.allowed_pricelist_ids = result
+
+    allowed_pricelist_ids = fields.Many2many(
+        comodel_name="product.pricelist",
+        string="Allowed Pricelists",
+        compute="_compute_allowed_pricelist_ids",
+        store=False,
+        compute_sudo=True,
+    )
 
     type_id = fields.Many2one(
         comodel_name="sale_order_type",
@@ -93,3 +118,10 @@ class SaleOrder(models.Model):
         ]
         res += policy_field
         return res
+
+    @api.onchange(
+        "type_id",
+    )
+    def onchange_pricelist_id(self):
+        if self.user_has_groups("product.group_product_pricelist"):
+            self.pricelist_id = False

@@ -73,6 +73,10 @@
         </xpath>
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
             <field name="type_id" options="{'no_open': True, 'no_create': True}" />
+            <field name="allowed_pricelist_ids" invisible="1" />
+        </xpath>
+        <xpath expr="//field[@name='pricelist_id']" position="attributes">
+            <attribute name="domain">[('id', 'in', allowed_pricelist_ids)]</attribute>
         </xpath>
         <xpath
                 expr="//group[@name='order_details']/div[@class='o_td_label'][1]"
@@ -137,7 +141,7 @@
 </record>
 
 <record id="sale.view_sales_order_auto_done_setting" model="ir.ui.view">
-    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="groups_id" eval="[(6, 0, [])]" />
 </record>
 
 <record id="sale.menu_sale_order_invoice" model="ir.ui.menu">
