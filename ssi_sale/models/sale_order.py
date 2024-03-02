@@ -11,7 +11,9 @@ class SaleOrder(models.Model):
         "sale.order",
         "mixin.policy",
         "mixin.many2one_configurator",
+        "mixin.sequence",
     ]
+    _document_number_field = "name"
 
     def _compute_policy(self):
         _super = super(SaleOrder, self)
@@ -33,6 +35,20 @@ class SaleOrder(models.Model):
                 )
             record.allowed_pricelist_ids = result
 
+    @api.depends("state", "date_order")
+    def _compute_name_by_sequence(self):
+        for rec in self:
+            name = rec.name or "/"
+            if rec.state == "sale" and (not rec.name or rec.name == "/"):
+                template = rec._get_template_sequence()
+                if template:
+                    name = template.create_sequence(rec)
+            rec.name = name
+
+    name = fields.Char(
+        compute="_compute_name_by_sequence",
+        store=True,
+    )
     allowed_pricelist_ids = fields.Many2many(
         comodel_name="product.pricelist",
         string="Allowed Pricelists",
@@ -40,7 +56,6 @@ class SaleOrder(models.Model):
         store=False,
         compute_sudo=True,
     )
-
     type_id = fields.Many2one(
         comodel_name="sale_order_type",
         string="Type",
@@ -102,6 +117,22 @@ class SaleOrder(models.Model):
     )
 
     @api.model
+    def default_get(self, fields):
+        _super = super(SaleOrder, self)
+        res = _super.default_get(fields)
+
+        res["name"] = "/"
+
+        return res
+
+    @api.model
+    def create(self, vals):
+        vals["name"] = "/"
+        _super = super(SaleOrder, self)
+        res = _super.create(vals)
+        return res
+
+    @api.model
     def _get_policy_field(self):
         res = super(SaleOrder, self)._get_policy_field()
         policy_field = [
@@ -125,3 +156,13 @@ class SaleOrder(models.Model):
     def onchange_pricelist_id(self):
         if self.user_has_groups("product.group_product_pricelist"):
             self.pricelist_id = False
+
+    def name_get(self):
+        result = []
+        for record in self:
+            if getattr(record, self._document_number_field) == "/":
+                name = "*" + str(record.id)
+            else:
+                name = record.name
+            result.append((record.id, name))
+        return result
