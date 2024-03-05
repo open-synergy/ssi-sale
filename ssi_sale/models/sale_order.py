@@ -35,20 +35,6 @@ class SaleOrder(models.Model):
                 )
             record.allowed_pricelist_ids = result
 
-    @api.depends("state", "date_order")
-    def _compute_name_by_sequence(self):
-        for rec in self:
-            name = rec.name or "/"
-            if rec.state == "sale" and (not rec.name or rec.name == "/"):
-                template = rec._get_template_sequence()
-                if template:
-                    name = template.create_sequence(rec)
-            rec.name = name
-
-    name = fields.Char(
-        compute="_compute_name_by_sequence",
-        store=True,
-    )
     allowed_pricelist_ids = fields.Many2many(
         comodel_name="product.pricelist",
         string="Allowed Pricelists",
@@ -115,6 +101,18 @@ class SaleOrder(models.Model):
         compute="_compute_policy",
         compute_sudo=True,
     )
+    manual_number_ok = fields.Boolean(
+        string="Can Input Manual Document Number",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
+
+    def action_confirm(self):
+        _super = super(SaleOrder, self)
+        res = _super.action_confirm()
+        for record in self:
+            record._create_sequence()
+        return res
 
     @api.model
     def default_get(self, fields):
@@ -146,6 +144,7 @@ class SaleOrder(models.Model):
             "draft_ok",
             "done_ok",
             "unlock_ok",
+            "manual_number_ok",
         ]
         res += policy_field
         return res
