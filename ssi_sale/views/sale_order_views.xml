@@ -3,11 +3,30 @@
      Copyright 2023 PT. Simetri Sinergi Indonesia
      License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
+<record id="view_order_tree" model="ir.ui.view">
+    <field name="name">sale.order.tree</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_tree" />
+    <field name="priority" eval="100" />
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='name']" position="replace">
+            <field name="id" optional="hide" />
+            <field name="display_name" string="# Document" />
+        </xpath>
+    </field>
+</record>
+
 <record id="view_order_form" model="ir.ui.view">
     <field name="name">sale.order.form</field>
     <field name="model">sale.order</field>
     <field name="inherit_id" ref="sale.view_order_form" />
     <field name="arch" type="xml">
+        <xpath expr="//field[@name='name']" position="attributes">
+            <attribute name="readonly">0</attribute>
+            <attribute
+                    name="attrs"
+                >{'readonly':[('manual_number_ok','=',False)]}</attribute>
+        </xpath>
         <xpath expr="//button[@name='payment_action_capture']" position="attributes">
             <attribute
                     name="attrs"
@@ -113,6 +132,7 @@
                     <field name="draft_ok" />
                     <field name="done_ok" />
                     <field name="unlock_ok" />
+                    <field name="manual_number_ok" />
                 </group>
             </page>
         </xpath>

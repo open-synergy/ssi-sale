@@ -11,7 +11,9 @@ class SaleOrder(models.Model):
         "sale.order",
         "mixin.policy",
         "mixin.many2one_configurator",
+        "mixin.sequence",
     ]
+    _document_number_field = "name"
 
     def _compute_policy(self):
         _super = super(SaleOrder, self)
@@ -40,7 +42,6 @@ class SaleOrder(models.Model):
         store=False,
         compute_sudo=True,
     )
-
     type_id = fields.Many2one(
         comodel_name="sale_order_type",
         string="Type",
@@ -100,6 +101,34 @@ class SaleOrder(models.Model):
         compute="_compute_policy",
         compute_sudo=True,
     )
+    manual_number_ok = fields.Boolean(
+        string="Can Input Manual Document Number",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
+
+    def action_confirm(self):
+        _super = super(SaleOrder, self)
+        res = _super.action_confirm()
+        for record in self:
+            record._create_sequence()
+        return res
+
+    @api.model
+    def default_get(self, fields):
+        _super = super(SaleOrder, self)
+        res = _super.default_get(fields)
+
+        res["name"] = "/"
+
+        return res
+
+    @api.model
+    def create(self, vals):
+        vals["name"] = "/"
+        _super = super(SaleOrder, self)
+        res = _super.create(vals)
+        return res
 
     @api.model
     def _get_policy_field(self):
@@ -115,6 +144,7 @@ class SaleOrder(models.Model):
             "draft_ok",
             "done_ok",
             "unlock_ok",
+            "manual_number_ok",
         ]
         res += policy_field
         return res
@@ -125,3 +155,13 @@ class SaleOrder(models.Model):
     def onchange_pricelist_id(self):
         if self.user_has_groups("product.group_product_pricelist"):
             self.pricelist_id = False
+
+    def name_get(self):
+        result = []
+        for record in self:
+            if getattr(record, self._document_number_field) == "/":
+                name = "*" + str(record.id)
+            else:
+                name = record.name
+            result.append((record.id, name))
+        return result
