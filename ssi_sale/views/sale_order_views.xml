@@ -7,6 +7,7 @@
     <field name="name">sale.order.tree</field>
     <field name="model">sale.order</field>
     <field name="inherit_id" ref="sale.view_order_tree" />
+    <field name="priority" eval="100" />
     <field name="arch" type="xml">
         <xpath expr="//field[@name='name']" position="replace">
             <field name="id" optional="hide" />
@@ -19,7 +20,6 @@
     <field name="name">sale.order.form</field>
     <field name="model">sale.order</field>
     <field name="inherit_id" ref="sale.view_order_form" />
-    <field name="priority">100</field>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='name']" position="attributes">
             <attribute name="readonly">0</attribute>
