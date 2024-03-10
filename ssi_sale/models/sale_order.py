@@ -151,10 +151,14 @@ class SaleOrder(models.Model):
 
     @api.onchange(
         "type_id",
+        "partner_id",
     )
     def onchange_pricelist_id(self):
         if self.user_has_groups("product.group_product_pricelist"):
             self.pricelist_id = False
+            if self.type_id and self.partner_id:
+                if self.partner_id.property_product_pricelist.id in self.allowed_pricelist_ids.ids:
+                    self.pricelist_id = self.partner_id.property_product_pricelist.id
 
     def name_get(self):
         result = []
