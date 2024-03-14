@@ -109,9 +109,9 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         _super = super(SaleOrder, self)
-        res = _super.action_confirm()
         for record in self:
             record._create_sequence()
+        res = _super.action_confirm()
         return res
 
     @api.model
