@@ -18,7 +18,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_sale](ssi_sale/) | 14.0.1.6.1 |  | Sale
+[ssi_sale](ssi_sale/) | 14.0.1.6.2 |  | Sale
 
 [//]: # (end addons)
 
