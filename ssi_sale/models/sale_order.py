@@ -172,3 +172,9 @@ class SaleOrder(models.Model):
                 name = record.name
             result.append((record.id, name))
         return result
+
+    def _prepare_confirmation_values(self):
+        res = super()._prepare_confirmation_values()
+        if "date_order" in res:
+            del res["date_order"]
+        return res
