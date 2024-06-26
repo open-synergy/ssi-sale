@@ -13,9 +13,20 @@ class SaleOrder(models.Model):
         "mixin.many2one_configurator",
         "mixin.sequence",
         "mixin.print_document",
+        "mixin.multiple_approval",
     ]
     _document_number_field = "name"
     _automatically_insert_print_button = True
+
+    _approval_state_field = "state"
+    _approval_from_state = "draft"
+    _approval_to_state = "sale"
+    _approval_cancel_state = "cancel"
+    _approval_reject_state = "reject"
+    _approval_state = "confirm"
+    _after_approved_method = "action_confirm"
+    _automatically_insert_multiple_approval_page = True
+    _multiple_approval_xpath_reference = "//page[last()]"
 
     def _compute_policy(self):
         _super = super(SaleOrder, self)
@@ -108,6 +119,32 @@ class SaleOrder(models.Model):
         compute="_compute_policy",
         compute_sudo=True,
     )
+    approve_ok = fields.Boolean(
+        string="Can Approve",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
+    reject_ok = fields.Boolean(
+        string="Can Reject",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
+    restart_approval_ok = fields.Boolean(
+        string="Can Restart Approval",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
+    state = fields.Selection(
+        selection_add=[
+            ("draft",),
+            ("confirm", "Waiting for Approval"),
+            ("reject", "Rejected"),
+        ],
+        ondelete={
+            "confirm": "set default",
+            "reject": "set default",
+        },
+    )
 
     def action_confirm(self):
         _super = super(SaleOrder, self)
@@ -115,6 +152,15 @@ class SaleOrder(models.Model):
             record._create_sequence()
         res = _super.action_confirm()
         return res
+
+    def action_confirm_custom(self):
+        for record in self.sudo():
+            record.write(
+                {
+                    "state": "confirm",
+                }
+            )
+            record.action_request_approval()
 
     @api.model
     def default_get(self, fields):
@@ -147,6 +193,9 @@ class SaleOrder(models.Model):
             "done_ok",
             "unlock_ok",
             "manual_number_ok",
+            "approve_ok",
+            "reject_ok",
+            "restart_approval_ok",
         ]
         res += policy_field
         return res

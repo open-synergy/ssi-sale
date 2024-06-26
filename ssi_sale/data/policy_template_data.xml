@@ -107,6 +107,72 @@
             />
     <field name="restrict_additional" eval="0" />
 </record>
+
+<!-- approve -->
+<record id="sale_order_policy_template_detail_approve" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','approve_ok')]"
+            />
+    <field name="restrict_state" eval="1" />
+    <field
+                name="state_ids"
+                search="[('field_id.model_id.model','=','sale.order'),('value','=','confirm')]"
+            />
+    <field name="restrict_user" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if env.user.id in document.active_approver_user_ids.ids:
+    result = True
+    </field>
+</record>
+
+<!-- reject -->
+<record id="sale_order_policy_template_detail_reject" model="policy.template_detail">
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','reject_ok')]"
+            />
+    <field name="restrict_state" eval="1" />
+    <field
+                name="state_ids"
+                search="[('field_id.model_id.model','=','sale.order'),('value','=','confirm')]"
+            />
+    <field name="restrict_user" eval="0" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if env.user.id in document.active_approver_user_ids.ids:
+    result = True
+    </field>
+</record>
+
+<!-- restart approval -->
+<record
+            id="sale_order_policy_template_detail_restart_approval"
+            model="policy.template_detail"
+        >
+    <field name="template_id" ref="policy_template_sale_order" />
+    <field
+                name="field_id"
+                search="[('model_id.model','=','sale.order'),('name','=','restart_approval_ok')]"
+            />
+    <field name="restrict_state" eval="1" />
+    <field
+                name="state_ids"
+                search="[('field_id.model_id.model','=','sale.order'),('value','=','confirm')]"
+            />
+    <field name="restrict_user" eval="1" />
+    <field name="computation_method">use_group</field>
+    <field name="group_ids" eval="[(6,0,[ref('sale_order_validator_group')])]" />
+    <field name="restrict_additional" eval="1" />
+    <field name="additional_python_code">result = False
+if not document.approval_template_id:
+    result = True
+    </field>
+</record>
+
 <record id="policy_template_sale_order_cancel" model="policy.template_detail">
     <field name="template_id" ref="policy_template_sale_order" />
     <field
@@ -116,7 +182,7 @@
     <field name="restrict_state" eval="1" />
     <field
                 name="state_ids"
-                search="[('field_id.model_id.model','=','sale.order'),('value','in',['draft','sent','sale'])]"
+                search="[('field_id.model_id.model','=','sale.order'),('value','in',['draft','sent','sale','confirm','reject'])]"
             />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
