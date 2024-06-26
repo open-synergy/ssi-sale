@@ -1,1 +1,3 @@
 git+https://github.com/open-synergy/ssi-mixin@14.0#subdirectory=setup/ssi_master_data_mixin
+odoo14-addon-ssi-state-change-constrain-mixin
+odoo14-addon-ssi-status-check-mixin
