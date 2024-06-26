@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo14-addon-ssi_sale',
+        'odoo14-addon-ssi_sale_order_state_change_constrain',
     ],
     classifiers=[
         'Programming Language :: Python',
