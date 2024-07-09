@@ -64,6 +64,14 @@ class SaleOrder(models.Model):
             "draft": [("readonly", False)],
         },
     )
+    order_line = fields.One2many(
+        readonly=True,
+        states={
+            "draft": [
+                ("readonly", False),
+            ],
+        },
+    )
     capture_ok = fields.Boolean(
         string="Can Capture Transaction",
         compute="_compute_policy",
