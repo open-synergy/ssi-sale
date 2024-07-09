@@ -85,11 +85,15 @@
                     name="attrs"
                 >{'invisible': [('cancel_ok', '!=', True)]}</attribute>
         </xpath>
+
         <xpath expr="//button[@name='action_draft']" position="attributes">
             <attribute name="states" />
             <attribute
                     name="attrs"
                 >{'invisible': [('draft_ok', '!=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//field[@name='order_line']" position="attributes">
+            <attribute name="attrs" />
         </xpath>
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
             <field name="type_id" options="{'no_open': True, 'no_create': True}" />
