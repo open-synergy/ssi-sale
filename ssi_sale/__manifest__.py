@@ -18,6 +18,7 @@
         "ssi_m2o_configurator_mixin",
         "ssi_policy_mixin",
         "ssi_multiple_approval_mixin",
+        "sale_stock",
     ],
     "data": [
         "security/ir_module_category_data.xml",
