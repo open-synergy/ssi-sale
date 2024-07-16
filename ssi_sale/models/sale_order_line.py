@@ -45,6 +45,7 @@ class SaleOrderLine(models.Model):
         "move_ids",
         "move_ids.forecast_expected_date",
         "move_ids.forecast_availability",
+        "order_id.state",
     )
     def _compute_qty_at_date(self):
         """Compute the quantity forecasted of product at delivery date. There are
