@@ -19,6 +19,7 @@
         "ssi_policy_mixin",
         "ssi_multiple_approval_mixin",
         "sale_stock",
+        "sale_order_price_recalculation",
     ],
     "data": [
         "security/ir_module_category_data.xml",
