@@ -64,6 +64,14 @@ class SaleOrder(models.Model):
             "draft": [("readonly", False)],
         },
     )
+
+    total_qty = fields.Float(
+        string="Total Qty",
+        compute="_compute_total_qty",
+        store=True,
+    )
+
+    # We want to restrict order line modificarion only on draft state
     order_line = fields.One2many(
         readonly=True,
         states={
@@ -72,6 +80,8 @@ class SaleOrder(models.Model):
             ],
         },
     )
+
+    # Fields for policy mixin
     capture_ok = fields.Boolean(
         string="Can Capture Transaction",
         compute="_compute_policy",
@@ -153,6 +163,17 @@ class SaleOrder(models.Model):
             "reject": "set default",
         },
     )
+
+    @api.depends(
+        "order_line",
+        "order_line.product_uom_qty",
+    )
+    def _compute_total_qty(self):
+        for record in self:
+            result = 0.0
+            for line in record.order_line:
+                result += line.product_uom_qty
+            record.total_qty = result
 
     def action_confirm(self):
         _super = super(SaleOrder, self)
