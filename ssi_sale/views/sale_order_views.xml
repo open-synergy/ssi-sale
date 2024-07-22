@@ -177,6 +177,12 @@
                 </group>
             </page>
         </xpath>
+
+        <xpath expr="//group[@name='note_group']" position="before">
+            <group name="group_extra" colspan="4" col="2">
+                <field name="total_qty" />
+            </group>
+        </xpath>
     </field>
 </record>
 <record id="view_sales_order_auto_done_setting" model="ir.ui.view">

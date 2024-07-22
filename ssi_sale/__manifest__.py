@@ -16,9 +16,9 @@
         "ssi_master_data_mixin",
         "ssi_sequence_mixin",
         "ssi_m2o_configurator_mixin",
-        "ssi_policy_mixin",
         "ssi_multiple_approval_mixin",
         "sale_stock",
+        "sale_order_price_recalculation",
     ],
     "data": [
         "security/ir_module_category_data.xml",
