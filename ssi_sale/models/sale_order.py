@@ -70,6 +70,31 @@ class SaleOrder(models.Model):
         compute="_compute_total_qty",
         store=True,
     )
+    qty_to_deliver = fields.Float(
+        string="Qty to Deliver",
+        compute="_compute_qty_deliver",
+        store=True,
+    )
+    qty_delivered = fields.Float(
+        string="Qty Delivered",
+        compute="_compute_qty_deliver",
+        store=True,
+    )
+    percent_delivered = fields.Float(
+        string="Percent Delivered",
+        compute="_compute_qty_deliver",
+        store=True,
+    )
+    qty_invoiced = fields.Float(
+        string="Qty Invoiced",
+        compute="_compute_qty_invoice",
+        store=True,
+    )
+    percent_invoiced = fields.Float(
+        string="Percent Invoiced",
+        compute="_compute_qty_invoice",
+        store=True,
+    )
 
     # We want to restrict order line modificarion only on draft state
     order_line = fields.One2many(
@@ -163,6 +188,48 @@ class SaleOrder(models.Model):
             "reject": "set default",
         },
     )
+
+    @api.depends(
+        "order_line",
+        "order_line.product_type",
+        "order_line.product_uom_qty",
+        "order_line.qty_delivered",
+    )
+    def _compute_qty_deliver(self):
+        for record in self:
+            qty_to_deliver = qty_delivered = percent_delivered = 0.0
+            for line in record.order_line:
+                if line.product_id.type == "product" and line.product_type == "product":
+                    qty_to_deliver += line.product_uom_qty
+                    qty_delivered += line.qty_delivered
+            if qty_to_deliver != 0.0:
+                try:
+                    percent_delivered = qty_delivered / qty_to_deliver
+                except ZeroDivisionError:
+                    percent_delivered = 0.0
+            record.qty_to_deliver = qty_to_deliver
+            record.qty_delivered = qty_delivered
+            record.percent_delivered = percent_delivered
+
+    @api.depends(
+        "order_line",
+        "order_line.product_type",
+        "order_line.product_uom_qty",
+        "order_line.qty_invoiced",
+    )
+    def _compute_qty_invoice(self):
+        for record in self:
+            qty_invoiced = percent_invoiced = 0.0
+            for line in record.order_line:
+                if line.product_type == "product":
+                    qty_invoiced += line.qty_invoiced
+            if line.product_uom_qty != 0.0:
+                try:
+                    percent_invoiced = qty_invoiced / line.product_uom_qty
+                except ZeroDivisionError:
+                    percent_invoiced = 0.0
+            record.qty_invoiced = qty_invoiced
+            record.percent_invoiced = percent_invoiced
 
     @api.depends(
         "order_line",
