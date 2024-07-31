@@ -13,6 +13,14 @@
             <field name="id" optional="hide" />
             <field name="display_name" string="# Document" />
         </xpath>
+        <xpath expr="//field[@name='invoice_status']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='invoice_status']" position="before">
+            <field name="percent_invoiced" widget="percentage" />
+            <field name="percent_delivered" widget="percentage" />
+            <field name="state" />
+        </xpath>
     </field>
 </record>
 
@@ -181,7 +189,20 @@
         <xpath expr="//group[@name='note_group']" position="before">
             <group name="group_extra" colspan="4" col="2">
                 <field name="total_qty" />
+                <field name="qty_to_deliver" />
+                <field name="qty_delivered" />
+                <field name="percent_delivered" widget="percentage" />
+                <field name="qty_invoiced" />
+                <field name="percent_invoiced" widget="percentage" />
             </group>
+        </xpath>
+
+        <xpath
+                expr="//field[@name='order_line']/tree/field[@name='state']"
+                position="before"
+            >
+            <field name="percent_delivered" widget="percentage" />
+            <field name="percent_invoiced" widget="percentage" />
         </xpath>
     </field>
 </record>

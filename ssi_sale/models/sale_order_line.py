@@ -1,10 +1,51 @@
 from collections import defaultdict
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    percent_delivered = fields.Float(
+        string="Percent Delivered",
+        compute="_compute_percent_delivered",
+        store=True,
+        compute_sudo=True,
+    )
+    percent_invoiced = fields.Float(
+        string="Percent Invoiced",
+        compute="_compute_percent_invoiced",
+        store=True,
+        compute_sudo=True,
+    )
+
+    @api.depends(
+        "qty_delivered",
+        "product_uom_qty",
+    )
+    def _compute_percent_delivered(self):
+        for record in self:
+            result = 0.0
+            if record.product_uom_qty != 0.0:
+                try:
+                    result = record.qty_delivered / record.product_uom_qty
+                except ZeroDivisionError:
+                    result = 0.0
+            record.percent_delivered = result
+
+    @api.depends(
+        "qty_invoiced",
+        "product_uom_qty",
+    )
+    def _compute_percent_invoiced(self):
+        for record in self:
+            result = 0.0
+            if record.product_uom_qty != 0.0:
+                try:
+                    result = record.qty_invoiced / record.product_uom_qty
+                except ZeroDivisionError:
+                    result = 0.0
+            record.percent_invoiced = result
 
     def _compute_invoice_status(self):
         super()._compute_invoice_status()
