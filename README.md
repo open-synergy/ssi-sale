@@ -18,7 +18,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ssi_sale](ssi_sale/) | 14.0.5.0.0 |  | Sale
+[ssi_sale](ssi_sale/) | 14.0.5.1.0 |  | Sale
 [ssi_sale_order_state_change_constrain](ssi_sale_order_state_change_constrain/) | 14.0.1.1.0 |  | Sale Order + State Change Constrain Integration
 
 [//]: # (end addons)
