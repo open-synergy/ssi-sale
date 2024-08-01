@@ -222,9 +222,8 @@ class SaleOrder(models.Model):
         for record in self:
             qty_invoiced = percent_invoiced = 0.0
             for line in record.order_line:
-                if line.product_type == "product":
-                    qty_invoiced += line.qty_invoiced
-            if line.product_uom_qty != 0.0:
+                qty_invoiced += line.qty_invoiced
+            if record.total_qty != 0.0:
                 try:
                     percent_invoiced = qty_invoiced / record.total_qty
                 except ZeroDivisionError:
