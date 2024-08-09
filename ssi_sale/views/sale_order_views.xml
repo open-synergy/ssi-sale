@@ -194,6 +194,8 @@
                 <field name="percent_delivered" widget="percentage" />
                 <field name="qty_invoiced" />
                 <field name="percent_invoiced" widget="percentage" />
+                <field name="product_cost" />
+                <field name="profit" />
             </group>
         </xpath>
 
@@ -203,6 +205,8 @@
             >
             <field name="percent_delivered" widget="percentage" />
             <field name="percent_invoiced" widget="percentage" />
+            <field name="product_cost" />
+            <field name="profit" />
         </xpath>
     </field>
 </record>

@@ -105,6 +105,16 @@ class SaleOrder(models.Model):
             ],
         },
     )
+    product_cost = fields.Float(
+        string="Product Cost",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    profit = fields.Float(
+        string="Profit",
+        compute="_compute_product_cost",
+        store=True,
+    )
 
     # Fields for policy mixin
     capture_ok = fields.Boolean(
@@ -188,6 +198,21 @@ class SaleOrder(models.Model):
             "reject": "set default",
         },
     )
+
+    @api.depends(
+        "order_line",
+        "order_line.product_cost",
+        "amount_untaxed",
+    )
+    def _compute_product_cost(self):
+        for record in self:
+            cost = profit = 0.0
+            for line in record.order_line:
+                cost += line.product_cost
+            profit = record.amount_untaxed - cost
+
+            record.product_cost = cost
+            record.profit = profit
 
     @api.depends(
         "order_line",

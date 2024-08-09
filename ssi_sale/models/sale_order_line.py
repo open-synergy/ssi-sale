@@ -18,6 +18,33 @@ class SaleOrderLine(models.Model):
         store=True,
         compute_sudo=True,
     )
+    product_cost = fields.Float(
+        string="Product Cost",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    profit = fields.Float(
+        string="Profit",
+        compute="_compute_product_cost",
+        store=True,
+    )
+
+    @api.depends(
+        "move_ids",
+        "move_ids.state",
+        "move_ids.stock_valuation_layer_ids",
+        "move_ids.stock_valuation_layer_ids.value",
+        "price_subtotal",
+    )
+    def _compute_product_cost(self):
+        for record in self:
+            cost = 0.0
+            if record.product_id.type == "product":
+                for move in record.move_ids.filtered(lambda r: r.state == "done"):
+                    for svl in move.stock_valuation_layer_ids:
+                        cost += abs(svl.value)
+            record.profit = record.price_subtotal - cost
+            record.product_cost = cost
 
     @api.depends(
         "qty_delivered",
