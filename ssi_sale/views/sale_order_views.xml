@@ -194,8 +194,11 @@
                 <field name="percent_delivered" widget="percentage" />
                 <field name="qty_invoiced" />
                 <field name="percent_invoiced" widget="percentage" />
+                <field name="revenue_without_tax" />
+                <field name="revenue_with_tax" />
                 <field name="product_cost" />
-                <field name="profit" />
+                <field name="profit_without_tax" />
+                <field name="profit_with_tax" />
             </group>
         </xpath>
 
@@ -205,8 +208,11 @@
             >
             <field name="percent_delivered" widget="percentage" />
             <field name="percent_invoiced" widget="percentage" />
-            <field name="product_cost" />
-            <field name="profit" />
+            <field name="revenue_without_tax" optional="hide" />
+            <field name="revenue_with_tax" optional="hide" />
+            <field name="product_cost" optional="hide" />
+            <field name="profit_without_tax" optional="hide" />
+            <field name="profit_with_tax" optional="hide" />
         </xpath>
     </field>
 </record>
