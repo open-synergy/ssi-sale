@@ -105,6 +105,31 @@ class SaleOrder(models.Model):
             ],
         },
     )
+    revenue_with_tax = fields.Float(
+        string="Revenue With Tax",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    revenue_without_tax = fields.Float(
+        string="Revenue Without Tax",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    product_cost = fields.Float(
+        string="Product Cost",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    profit_with_tax = fields.Float(
+        string="Profit With Tax",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    profit_without_tax = fields.Float(
+        string="Profit Without Tax",
+        compute="_compute_product_cost",
+        store=True,
+    )
 
     # Fields for policy mixin
     capture_ok = fields.Boolean(
@@ -188,6 +213,26 @@ class SaleOrder(models.Model):
             "reject": "set default",
         },
     )
+
+    @api.depends(
+        "order_line",
+        "order_line.product_cost",
+        "order_line.revenue_without_tax",
+        "order_line.revenue_with_tax",
+    )
+    def _compute_product_cost(self):
+        for record in self:
+            cost = revenue_without_tax = revenue_with_tax = 0.0
+            for line in record.order_line:
+                cost += line.product_cost
+                revenue_without_tax += line.revenue_without_tax
+                revenue_with_tax += line.revenue_with_tax
+
+            record.product_cost = cost
+            record.revenue_without_tax = revenue_without_tax
+            record.revenue_with_tax = revenue_with_tax
+            record.profit_without_tax = revenue_without_tax - cost
+            record.profit_with_tax = revenue_with_tax - cost
 
     @api.depends(
         "order_line",

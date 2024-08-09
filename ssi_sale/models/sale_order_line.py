@@ -18,6 +18,68 @@ class SaleOrderLine(models.Model):
         store=True,
         compute_sudo=True,
     )
+    revenue_with_tax = fields.Float(
+        string="Revenue With Tax",
+        compute="_compute_revenue",
+        store=True,
+    )
+    revenue_without_tax = fields.Float(
+        string="Revenue Without Tax",
+        compute="_compute_revenue",
+        store=True,
+    )
+    product_cost = fields.Float(
+        string="Product Cost",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    profit_with_tax = fields.Float(
+        string="Profit With Tax",
+        compute="_compute_product_cost",
+        store=True,
+    )
+    profit_without_tax = fields.Float(
+        string="Profit Without Tax",
+        compute="_compute_product_cost",
+        store=True,
+    )
+
+    @api.depends(
+        "invoice_lines",
+        "invoice_lines.move_id.state",
+        "invoice_lines.price_subtotal",
+        "invoice_lines.price_total",
+    )
+    def _compute_revenue(self):
+        for record in self:
+            with_tax = without_tax = 0.0
+            for line in record.invoice_lines.filtered(
+                lambda r: r.move_id.state == "posted"
+            ):
+                without_tax += line.price_subtotal
+                with_tax += line.price_total
+            record.revenue_with_tax = with_tax
+            record.revenue_without_tax = without_tax
+
+    @api.depends(
+        "move_ids",
+        "move_ids.state",
+        "move_ids.stock_valuation_layer_ids",
+        "move_ids.stock_valuation_layer_ids.value",
+        "price_subtotal",
+        "revenue_with_tax",
+        "revenue_without_tax",
+    )
+    def _compute_product_cost(self):
+        for record in self:
+            cost = 0.0
+            if record.product_id.type == "product":
+                for move in record.move_ids.filtered(lambda r: r.state == "done"):
+                    for svl in move.stock_valuation_layer_ids:
+                        cost += abs(svl.value)
+            record.profit_with_tax = record.revenue_with_tax - cost
+            record.profit_without_tax = record.revenue_without_tax - cost
+            record.product_cost = cost
 
     @api.depends(
         "qty_delivered",
