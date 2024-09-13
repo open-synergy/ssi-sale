@@ -1,8 +1,9 @@
 # Copyright 2023 OpenSynergy Indonesia
 # Copyright 2023 PT. Simetri Sinergi Indonesia
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -355,6 +356,24 @@ class SaleOrder(models.Model):
                 ):
                     self.pricelist_id = self.partner_id.property_product_pricelist.id
 
+    @api.constrains(
+        "name",
+    )
+    def _constrains_duplicate_document_number(self):
+        for record in self.sudo():
+            if not record._check_duplicate_document_number():
+                error_message = """
+                Document Type: %s
+                Context: Change document number
+                Database ID: %s
+                Problem: Duplicate document number
+                Solution: Change document number into different number
+                """ % (
+                    self._description.lower(),
+                    record.id,
+                )
+                raise UserError(_(error_message))
+
     def name_get(self):
         result = []
         for record in self:
@@ -370,3 +389,21 @@ class SaleOrder(models.Model):
         if "date_order" in res:
             del res["date_order"]
         return res
+
+    def _check_duplicate_document_number(self):
+        self.ensure_one()
+        result = True
+        criteria = [
+            (
+                "name",
+                "=",
+                self.name,
+            ),
+            ("name", "!=", "/"),
+            ("id", "!=", self.id),
+        ]
+        SaleOrder = self.env["sale.order"]
+        count_duplicate = SaleOrder.search_count(criteria)
+        if count_duplicate > 0:
+            result = False
+        return result
