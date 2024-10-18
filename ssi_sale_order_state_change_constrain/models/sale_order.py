@@ -14,6 +14,11 @@ class SaleOrder(models.Model):
     ]
 
     _status_check_create_page = True
+    _status_check_include_fields = [
+        "type_id",
+        "partner_id",
+        "payment_term_id",
+    ]
 
     @api.onchange("type_id")
     def onchange_status_check_template_id(self):
