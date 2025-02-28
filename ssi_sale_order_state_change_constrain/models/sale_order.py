@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
         "payment_term_id",
     ]
 
-    @api.onchange("type_id")
+    @api.onchange("type_id", "partner_id", "payment_term_id")
     def onchange_status_check_template_id(self):
         self.status_check_template_id = False
         if self.type_id:
