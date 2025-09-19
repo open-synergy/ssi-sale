@@ -6,7 +6,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        vals = super(SaleAdvancePaymentInv, self).default_get(fields)
+        vals = super().default_get(fields)
         invoice_status = self.env.context.get("invoice_status")
         if invoice_status == "no":
             vals["advance_payment_method"] = "percentage"
