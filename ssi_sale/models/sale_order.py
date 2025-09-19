@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
     _multiple_approval_xpath_reference = "//page[last()]"
 
     def _compute_policy(self):
-        _super = super(SaleOrder, self)
+        _super = super()
         _super._compute_policy()
 
     @api.depends(
@@ -70,31 +70,49 @@ class SaleOrder(models.Model):
         string="Total Qty",
         compute="_compute_total_qty",
         store=True,
+        compute_sudo=True,
     )
     qty_to_deliver = fields.Float(
         string="Qty to Deliver",
         compute="_compute_qty_deliver",
         store=True,
+        compute_sudo=True,
     )
     qty_delivered = fields.Float(
         string="Qty Delivered",
         compute="_compute_qty_deliver",
         store=True,
+        compute_sudo=True,
     )
     percent_delivered = fields.Float(
         string="Percent Delivered",
         compute="_compute_qty_deliver",
         store=True,
+        compute_sudo=True,
     )
     qty_invoiced = fields.Float(
         string="Qty Invoiced",
         compute="_compute_qty_invoice",
         store=True,
+        compute_sudo=True,
     )
     percent_invoiced = fields.Float(
         string="Percent Invoiced",
         compute="_compute_qty_invoice",
         store=True,
+        compute_sudo=True,
+    )
+    amount_invoice = fields.Monetary(
+        string="Amount Invoiced",
+        compute="_compute_qty_invoice",
+        store=True,
+        compute_sudo=True,
+    )
+    amount_uninvoice = fields.Monetary(
+        string="Amount Uninvoiced",
+        compute="_compute_qty_invoice",
+        store=True,
+        compute_sudo=True,
     )
 
     # We want to restrict order line modificarion only on draft state
@@ -110,26 +128,31 @@ class SaleOrder(models.Model):
         string="Revenue With Tax",
         compute="_compute_product_cost",
         store=True,
+        compute_sudo=True,
     )
     revenue_without_tax = fields.Float(
         string="Revenue Without Tax",
         compute="_compute_product_cost",
         store=True,
+        compute_sudo=True,
     )
     product_cost = fields.Float(
         string="Product Cost",
         compute="_compute_product_cost",
         store=True,
+        compute_sudo=True,
     )
     profit_with_tax = fields.Float(
         string="Profit With Tax",
         compute="_compute_product_cost",
         store=True,
+        compute_sudo=True,
     )
     profit_without_tax = fields.Float(
         string="Profit Without Tax",
         compute="_compute_product_cost",
         store=True,
+        compute_sudo=True,
     )
 
     # Fields for policy mixin
@@ -266,7 +289,7 @@ class SaleOrder(models.Model):
     )
     def _compute_qty_invoice(self):
         for record in self:
-            qty_invoiced = percent_invoiced = 0.0
+            qty_invoiced = percent_invoiced = amount_invoice = amount_uninvoice = 0.0
             for line in record.order_line:
                 qty_invoiced += line.qty_invoiced
             if record.total_qty != 0.0:
@@ -274,8 +297,12 @@ class SaleOrder(models.Model):
                     percent_invoiced = qty_invoiced / record.total_qty
                 except ZeroDivisionError:
                     percent_invoiced = 0.0
+                amount_invoice += line.amount_invoice
+                amount_uninvoice += amount_uninvoice
             record.qty_invoiced = qty_invoiced
             record.percent_invoiced = percent_invoiced
+            record.amount_invoice = amount_invoice
+            record.amount_uninvoice = amount_uninvoice
 
     @api.depends(
         "order_line",
@@ -289,7 +316,7 @@ class SaleOrder(models.Model):
             record.total_qty = result
 
     def action_confirm(self):
-        _super = super(SaleOrder, self)
+        _super = super()
         for record in self:
             record._create_sequence()
         res = _super.action_confirm()
@@ -306,7 +333,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def default_get(self, fields):
-        _super = super(SaleOrder, self)
+        _super = super()
         res = _super.default_get(fields)
 
         res["name"] = "/"
@@ -316,13 +343,13 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals):
         vals["name"] = "/"
-        _super = super(SaleOrder, self)
+        _super = super()
         res = _super.create(vals)
         return res
 
     @api.model
     def _get_policy_field(self):
-        res = super(SaleOrder, self)._get_policy_field()
+        res = super()._get_policy_field()
         policy_field = [
             "capture_ok",
             "void_ok",

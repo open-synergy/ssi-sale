@@ -18,6 +18,18 @@ class SaleOrderLine(models.Model):
         store=True,
         compute_sudo=True,
     )
+    amount_invoice = fields.Monetary(
+        string="Amount Invoiced",
+        compute="_compute_percent_invoiced",
+        store=True,
+        compute_sudo=True,
+    )
+    amount_uninvoice = fields.Monetary(
+        string="Amount Uninvoiced",
+        compute="_compute_percent_invoiced",
+        store=True,
+        compute_sudo=True,
+    )
     revenue_with_tax = fields.Float(
         string="Revenue With Tax",
         compute="_compute_revenue",
@@ -101,17 +113,26 @@ class SaleOrderLine(models.Model):
     )
     def _compute_percent_invoiced(self):
         for record in self:
-            result = 0.0
+            result = amount_invoice = amount_uninvoice = 0.0
+            try:
+                price_unit = record.price_total / record.product_uom_qty
+            except ZeroDivisionError:
+                price_unit = 0.0
             if record.product_uom_qty != 0.0:
                 try:
                     result = record.qty_invoiced / record.product_uom_qty
                 except ZeroDivisionError:
                     result = 0.0
+            amount_invoice = record.qty_invoiced * price_unit
+            amount_uninvoice = record.price_total - amount_invoice
+
+            record.amount_invoice = amount_invoice
+            record.amount_uninvoice = amount_uninvoice
             record.percent_invoiced = result
 
     def _compute_invoice_status(self):
         super()._compute_invoice_status()
-        for line in self.filtered(lambda l: l.state == "done"):
+        for line in self.filtered(lambda order_line: order_line.state == "done"):
             line.invoice_status = "invoiced"
 
     @api.depends(
@@ -157,7 +178,7 @@ class SaleOrderLine(models.Model):
          2. The quotation hasn't commitment_date, we compute the estimated delivery
             date based on lead time"""
         treated = self.browse()
-        for line in self.filtered(lambda l: l.state == "sale"):
+        for line in self.filtered(lambda oline: oline.state == "sale"):
             if not line.display_qty_widget:
                 continue
             moves = line.move_ids.filtered(lambda m: m.product_id == line.product_id)
@@ -180,11 +201,13 @@ class SaleOrderLine(models.Model):
             line.virtual_available_at_date = False
             treated |= line
 
-        qty_processed_per_product = defaultdict(lambda: 0)
+        qty_processed_per_product = defaultdict(int)
         grouped_lines = defaultdict(lambda: self.env["sale.order.line"])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
-        for line in self.filtered(lambda l: l.state in ("draft", "sent", "confirm")):
+        for line in self.filtered(
+            lambda oline: oline.state in ("draft", "sent", "confirm")
+        ):
             if not (line.product_id and line.display_qty_widget):
                 continue
             grouped_lines[
