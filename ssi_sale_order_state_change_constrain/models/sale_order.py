@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        _super = super(SaleOrder, self)
+        _super = super()
         sales = _super.create(vals_list)
         sales.onchange_status_check_template_id()
         return sales
