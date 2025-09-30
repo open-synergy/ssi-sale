@@ -114,6 +114,18 @@ class SaleOrder(models.Model):
         store=True,
         compute_sudo=True,
     )
+    amount_delivered = fields.Monetary(
+        string="Amount Delivered",
+        compute="_compute_qty_deliver",
+        store=True,
+        compute_sudo=True,
+    )
+    amount_undelivered = fields.Monetary(
+        string="Amount Undelivered",
+        compute="_compute_qty_deliver",
+        store=True,
+        compute_sudo=True,
+    )
 
     # We want to restrict order line modificarion only on draft state
     order_line = fields.One2many(
@@ -266,11 +278,15 @@ class SaleOrder(models.Model):
     )
     def _compute_qty_deliver(self):
         for record in self:
-            qty_to_deliver = qty_delivered = percent_delivered = 0.0
+            qty_to_deliver = qty_delivered = percent_delivered = amount_delivered = (
+                amount_undelivered
+            ) = 0.0
             for line in record.order_line:
                 if line.product_id.type == "product" and line.product_type == "product":
                     qty_to_deliver += line.product_uom_qty
                     qty_delivered += line.qty_delivered
+                    amount_delivered += line.amount_delivered
+                    amount_undelivered += line.amount_undelivered
             if qty_to_deliver != 0.0:
                 try:
                     percent_delivered = qty_delivered / qty_to_deliver
@@ -279,6 +295,8 @@ class SaleOrder(models.Model):
             record.qty_to_deliver = qty_to_deliver
             record.qty_delivered = qty_delivered
             record.percent_delivered = percent_delivered
+            record.amount_delivered = amount_delivered
+            record.amount_undelivered = amount_undelivered
 
     @api.depends(
         "order_line",
@@ -292,13 +310,14 @@ class SaleOrder(models.Model):
             qty_invoiced = percent_invoiced = amount_invoice = amount_uninvoice = 0.0
             for line in record.order_line:
                 qty_invoiced += line.qty_invoiced
+                amount_invoice += line.amount_invoice
+                amount_uninvoice += amount_uninvoice
             if record.total_qty != 0.0:
                 try:
                     percent_invoiced = qty_invoiced / record.total_qty
                 except ZeroDivisionError:
                     percent_invoiced = 0.0
-                amount_invoice += line.amount_invoice
-                amount_uninvoice += amount_uninvoice
+
             record.qty_invoiced = qty_invoiced
             record.percent_invoiced = percent_invoiced
             record.amount_invoice = amount_invoice

@@ -30,6 +30,18 @@ class SaleOrderLine(models.Model):
         store=True,
         compute_sudo=True,
     )
+    amount_delivered = fields.Monetary(
+        string="Amount Delivered",
+        compute="_compute_percent_delivered",
+        store=True,
+        compute_sudo=True,
+    )
+    amount_undelivered = fields.Monetary(
+        string="Amount Undelivered",
+        compute="_compute_percent_delivered",
+        store=True,
+        compute_sudo=True,
+    )
     revenue_with_tax = fields.Float(
         string="Revenue With Tax",
         compute="_compute_revenue",
@@ -99,13 +111,22 @@ class SaleOrderLine(models.Model):
     )
     def _compute_percent_delivered(self):
         for record in self:
-            result = 0.0
+            result = amount_delivered = amount_undelivered = 0.0
+            try:
+                price_unit = record.price_total / record.product_uom_qty
+            except ZeroDivisionError:
+                price_unit = 0.0
             if record.product_uom_qty != 0.0:
                 try:
                     result = record.qty_delivered / record.product_uom_qty
                 except ZeroDivisionError:
                     result = 0.0
             record.percent_delivered = result
+            amount_delivered = record.qty_delivered * price_unit
+            amount_undelivered = record.price_total - amount_delivered
+
+            record.amount_delivered = amount_delivered
+            record.amount_undelivered = amount_undelivered
 
     @api.depends(
         "qty_invoiced",

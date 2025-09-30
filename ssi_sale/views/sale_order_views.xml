@@ -192,6 +192,8 @@
                 <field name="qty_to_deliver" />
                 <field name="qty_delivered" />
                 <field name="percent_delivered" widget="percentage" />
+                <field name="amount_delivered" />
+                <field name="amount_undelivered" />
                 <field name="qty_invoiced" />
                 <field name="percent_invoiced" widget="percentage" />
                 <field name="amount_invoice" />
@@ -212,6 +214,8 @@
             <field name="percent_invoiced" widget="percentage" />
             <field name="amount_invoice" optional="hide" />
             <field name="amount_uninvoice" optional="hide" />
+            <field name="amount_delivered" optional="hide" />
+            <field name="amount_undelivered" optional="hide" />
             <field name="revenue_without_tax" optional="hide" />
             <field name="revenue_with_tax" optional="hide" />
             <field name="product_cost" optional="hide" />
