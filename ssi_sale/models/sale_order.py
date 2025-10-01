@@ -311,7 +311,7 @@ class SaleOrder(models.Model):
             for line in record.order_line:
                 qty_invoiced += line.qty_invoiced
                 amount_invoice += line.amount_invoice
-                amount_uninvoice += amount_uninvoice
+                amount_uninvoice += line.amount_uninvoice
             if record.total_qty != 0.0:
                 try:
                     percent_invoiced = qty_invoiced / record.total_qty
