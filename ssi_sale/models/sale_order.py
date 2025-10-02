@@ -283,7 +283,7 @@ class SaleOrder(models.Model):
             ) = 0.0
             for line in record.order_line:
                 if line.product_id.type == "product" and line.product_type == "product":
-                    qty_to_deliver += line.product_uom_qty
+                    qty_to_deliver += line.qty_to_deliver
                     qty_delivered += line.qty_delivered
                     amount_delivered += line.amount_delivered
                     amount_undelivered += line.amount_undelivered
