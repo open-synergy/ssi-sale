@@ -130,6 +130,7 @@ class SaleOrderLine(models.Model):
 
     @api.depends(
         "qty_invoiced",
+        "qty_to_invoice",
         "product_uom_qty",
     )
     def _compute_percent_invoiced(self):
@@ -145,7 +146,7 @@ class SaleOrderLine(models.Model):
                 except ZeroDivisionError:
                     result = 0.0
             amount_invoice = record.qty_invoiced * price_unit
-            amount_uninvoice = record.price_total - amount_invoice
+            amount_uninvoice = record.qty_to_invoice * price_unit
 
             record.amount_invoice = amount_invoice
             record.amount_uninvoice = amount_uninvoice
