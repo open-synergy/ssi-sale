@@ -350,6 +350,15 @@ class SaleOrder(models.Model):
             )
             record.action_request_approval()
 
+    def action_recompute_qty_helper(self):
+        for record in self.sudo():
+            record.order_line._get_to_invoice_qty()
+            record.order_line._compute_qty_delivered()
+            record.order_line._compute_percent_delivered()
+            record.order_line._compute_percent_invoiced()
+            record._compute_qty_invoice()
+            record._compute_qty_deliver()
+
     @api.model
     def default_get(self, fields):
         _super = super()
