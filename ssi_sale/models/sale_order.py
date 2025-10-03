@@ -287,11 +287,10 @@ class SaleOrder(models.Model):
                     qty_delivered += line.qty_delivered
                     amount_delivered += line.amount_delivered
                     amount_undelivered += line.amount_undelivered
-            if qty_to_deliver != 0.0:
-                try:
-                    percent_delivered = qty_delivered / record.total_qty
-                except ZeroDivisionError:
-                    percent_delivered = 0.0
+            try:
+                percent_delivered = qty_delivered / record.total_qty
+            except ZeroDivisionError:
+                percent_delivered = 0.0
             record.qty_to_deliver = qty_to_deliver
             record.qty_delivered = qty_delivered
             record.percent_delivered = percent_delivered
