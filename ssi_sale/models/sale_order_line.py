@@ -108,6 +108,8 @@ class SaleOrderLine(models.Model):
     @api.depends(
         "qty_delivered",
         "product_uom_qty",
+        "qty_invoiced",
+        "qty_to_invoice",
     )
     def _compute_percent_delivered(self):
         for record in self:
@@ -132,6 +134,7 @@ class SaleOrderLine(models.Model):
         "qty_invoiced",
         "qty_to_invoice",
         "product_uom_qty",
+        "qty_delivered",
     )
     def _compute_percent_invoiced(self):
         for record in self:
