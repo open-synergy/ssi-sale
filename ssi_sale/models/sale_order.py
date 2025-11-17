@@ -183,6 +183,11 @@ class SaleOrder(models.Model):
         compute="_compute_policy",
         compute_sudo=True,
     )
+    view_invoice_ok = fields.Boolean(
+        string="Can View Invoice",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
     email_ok = fields.Boolean(
         string="Can Send by Email",
         compute="_compute_policy",
@@ -381,6 +386,7 @@ class SaleOrder(models.Model):
             "capture_ok",
             "void_ok",
             "invoice_ok",
+            "view_invoice_ok",
             "email_ok",
             "proforma_ok",
             "confirm_ok",

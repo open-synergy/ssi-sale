@@ -55,6 +55,11 @@
                 >{'invisible': [('invoice_ok', '!=', True)]}</attribute>
             <attribute name="context">{'invoice_status': invoice_status}</attribute>
         </xpath>
+        <xpath expr="//button[@name='action_view_invoice']" position="attributes">
+            <attribute
+                    name="attrs"
+                >{'invisible': [('view_invoice_ok', '!=', True)]}</attribute>
+        </xpath>
         <xpath
                 expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]"
                 position="attributes"
@@ -170,6 +175,7 @@
                     <field name="capture_ok" />
                     <field name="void_ok" />
                     <field name="invoice_ok" />
+                    <field name="view_invoice_ok" />
                     <field name="email_ok" />
                     <field name="proforma_ok" />
                     <field name="confirm_ok" />
