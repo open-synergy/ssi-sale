@@ -66,6 +66,24 @@ class SaleOrder(models.Model):
         },
     )
 
+    partner_invoice_id = fields.Many2one(
+        readonly=True,
+        states={
+            "draft": [("readonly", False)],
+        },
+    )
+    partner_shipping_id = fields.Many2one(
+        readonly=True,
+        states={
+            "draft": [("readonly", False)],
+        },
+    )
+    payment_term_id = fields.Many2one(
+        readonly=True,
+        states={
+            "draft": [("readonly", False)],
+        },
+    )
     total_qty = fields.Float(
         string="Total Qty",
         compute="_compute_total_qty",
