@@ -325,6 +325,8 @@ class SaleOrder(models.Model):
         "order_line.product_type",
         "order_line.product_uom_qty",
         "order_line.qty_invoiced",
+        "order_line.amount_invoice",
+        "order_line.amount_uninvoice",
         "total_qty",
     )
     def _compute_qty_invoice(self):
