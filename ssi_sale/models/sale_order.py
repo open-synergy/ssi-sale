@@ -311,9 +311,9 @@ class SaleOrder(models.Model):
     )
     def _compute_qty_deliver(self):
         for record in self:
-            qty_to_deliver = qty_delivered = percent_delivered = amount_delivered = (
-                amount_undelivered
-            ) = 0.0
+            qty_to_deliver = (
+                qty_delivered
+            ) = percent_delivered = amount_delivered = amount_undelivered = 0.0
             for line in record.order_line:
                 if line.product_id.type == "product" and line.product_type == "product":
                     qty_to_deliver += line.qty_to_deliver
