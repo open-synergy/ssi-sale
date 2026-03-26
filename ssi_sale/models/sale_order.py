@@ -186,6 +186,16 @@ class SaleOrder(models.Model):
     )
 
     # Fields for policy mixin
+    recalculate_price_ok = fields.Boolean(
+        string="Can Recalculate Price",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
+    recalculate_name_ok = fields.Boolean(
+        string="Can Reset Description",
+        compute="_compute_policy",
+        compute_sudo=True,
+    )
     capture_ok = fields.Boolean(
         string="Can Capture Transaction",
         compute="_compute_policy",
@@ -301,9 +311,9 @@ class SaleOrder(models.Model):
     )
     def _compute_qty_deliver(self):
         for record in self:
-            qty_to_deliver = qty_delivered = percent_delivered = amount_delivered = (
-                amount_undelivered
-            ) = 0.0
+            qty_to_deliver = (
+                qty_delivered
+            ) = percent_delivered = amount_delivered = amount_undelivered = 0.0
             for line in record.order_line:
                 if line.product_id.type == "product" and line.product_type == "product":
                     qty_to_deliver += line.qty_to_deliver
@@ -403,6 +413,8 @@ class SaleOrder(models.Model):
     def _get_policy_field(self):
         res = super()._get_policy_field()
         policy_field = [
+            "recalculate_price_ok",
+            "recalculate_name_ok",
             "capture_ok",
             "void_ok",
             "invoice_ok",
