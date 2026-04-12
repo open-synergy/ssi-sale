@@ -499,3 +499,17 @@ class SaleOrder(models.Model):
         if count_duplicate > 0:
             result = False
         return result
+
+    def action_view_delivery(self):
+        _super = super(SaleOrder, self)
+        action = _super.action_view_delivery()
+        picking_id = action.get("res_id")
+        if action and picking_id:
+            picking = self.env["stock.picking"].browse(picking_id)
+            if picking.picking_type_id and picking.picking_type_id.category_id:
+                ctx = dict(action.get("context", {}))
+                ctx[
+                    "default_picking_type_category_id"
+                ] = picking.picking_type_id.category_id.id
+                action["context"] = ctx
+        return action
