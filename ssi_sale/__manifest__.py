@@ -17,6 +17,7 @@
         "ssi_sequence_mixin",
         "ssi_m2o_configurator_mixin",
         "ssi_multiple_approval_mixin",
+        "ssi_stock",
         "sale_stock",
         "sale_order_price_recalculation",
     ],
