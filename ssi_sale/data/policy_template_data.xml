@@ -183,7 +183,7 @@ if env.user.id in document.active_approver_user_ids.ids:
     <field name="group_ids" eval="[(6,0,[ref('sale_order_validator_group')])]" />
     <field name="restrict_additional" eval="1" />
     <field name="additional_python_code">result = False
-if not document.approval_template_id:
+if document.approval_template_id:
     result = True
     </field>
 </record>

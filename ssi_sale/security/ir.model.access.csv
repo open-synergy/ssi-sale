@@ -1,3 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_sale_order_type_all,sale_order_type - all,model_sale_order_type,,1,0,0,0
 access_sale_order_type_configurator,sale_order_type - configurator,model_sale_order_type,sale_order_type_group,1,1,1,1
+access_sale_order_all,sale_order - all,model_sale_order,,1,0,0,0
+access_sale_order_viewer,sale_order - viewer,model_sale_order,sale_order_viewer_group,1,0,0,0
+access_sale_order_user,sale_order - user,model_sale_order,sale_order_user_group,1,1,1,1
+access_sale_order_line_all,sale_order_line - all,model_sale_order_line,,1,0,0,0
+access_sale_order_line_viewer,sale_order_line - viewer,model_sale_order_line,sale_order_viewer_group,1,0,0,0
+access_sale_order_line_user,sale_order_line - user,model_sale_order_line,sale_order_user_group,1,1,1,1

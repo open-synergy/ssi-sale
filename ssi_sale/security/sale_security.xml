@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Sale Order -->
+    <record id="sale.access_sale_order" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale.access_sale_order_manager" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale.access_sale_order_readonly" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale.access_sale_order_accountant" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale.access_sale_order_invoicing_payments" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale_stock.access_sale_order_stock_worker" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+
+
+    <!-- Sale Order Line-->
+    <record id="sale.access_sale_order_line" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale.access_sale_order_line_readonly" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale.access_sale_order_line_accountant" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale.access_sale_order_line_invoicing_payments" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+    <record id="sale_stock.access_sale_order_line_stock_worker" model="ir.model.access">
+        <field name="perm_read">0</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
+    </record>
+</odoo>
