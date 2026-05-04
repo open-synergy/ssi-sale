@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Sale",
-    "version": "14.0.5.19.1",
+    "version": "14.0.6.0.0",
     "category": "Sale",
     "website": "https://simetri-sinergi.id",
     "author": "PT. Simetri Sinergi Indonesia, OpenSynergy Indonesia",
@@ -24,6 +24,7 @@
     "data": [
         "security/ir_module_category_data.xml",
         "security/res_group_data.xml",
+        "security/sale_security.xml",
         "security/ir.model.access.csv",
         "data/sale_order_type.xml",
         "data/approval_template_data.xml",
