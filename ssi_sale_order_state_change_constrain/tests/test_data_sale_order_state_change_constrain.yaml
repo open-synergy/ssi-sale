@@ -1,0 +1,94 @@
+scenarios:
+  - name: "Sale Order State Change Constrain - Create with status check"
+    steps:
+      - step: "Get default sale order type"
+        action: "ref"
+        xml_id: "ssi_sale.sale_order_type_normal"
+        save_as: "order_type"
+
+      - step: "Create partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Test Customer State Change"
+          customer_rank: 1
+
+      - step:
+          "Create sale order (triggers onchange_status_check_template_id via create)"
+        action: "create"
+        model: "sale.order"
+        save_as: "order"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "EVAL: registry['partner'].id"
+          type_id: "EVAL: registry['order_type'].id"
+
+      - step: "Assert sale order created"
+        action: "assert"
+        target: "order"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "Sale Order State Change Constrain - Full workflow with status check"
+    steps:
+      - step: "Get default sale order type"
+        action: "ref"
+        xml_id: "ssi_sale.sale_order_type_normal"
+        save_as: "order_type"
+
+      - step: "Create partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Test Customer Full Workflow SCC"
+          customer_rank: 1
+
+      - step: "Create sale order"
+        action: "create"
+        model: "sale.order"
+        save_as: "order"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "EVAL: registry['partner'].id"
+          type_id: "EVAL: registry['order_type'].id"
+
+      - step: "Confirm sale order"
+        action: "call"
+        target: "order"
+        method: "action_confirm_custom"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate cache after confirm"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Approve sale order"
+        action: "call"
+        target: "order"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after approval"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Assert sale order in sale state"
+        action: "assert"
+        target: "order"
+        asserts:
+          state:
+            type: "value"
+            expected: "sale"
