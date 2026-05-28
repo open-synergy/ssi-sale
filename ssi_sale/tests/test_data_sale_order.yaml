@@ -1,0 +1,284 @@
+scenarios:
+  - name: "Sale Order - Full workflow: draft to sale with approval"
+    steps:
+      - step: "Get default sale order type"
+        action: "ref"
+        xml_id: "ssi_sale.sale_order_type_normal"
+        save_as: "order_type"
+
+      - step: "Create partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Test Customer Sale Order"
+          customer_rank: 1
+
+      - step: "Create sale order"
+        action: "create"
+        model: "sale.order"
+        save_as: "order"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "EVAL: registry['partner'].id"
+          type_id: "EVAL: registry['order_type'].id"
+
+      - step: "Assert sale order created in draft"
+        action: "assert"
+        target: "order"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+          type_id:
+            type: "value"
+            operator: "is_truthy"
+
+      - step: "Confirm sale order (move to waiting for approval)"
+        action: "call"
+        target: "order"
+        method: "action_confirm_custom"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate cache after confirm"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Approve sale order"
+        action: "call"
+        target: "order"
+        method: "action_approve_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after approval"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Assert sale order is now confirmed (sale state)"
+        action: "assert"
+        target: "order"
+        asserts:
+          state:
+            type: "value"
+            expected: "sale"
+          name:
+            type: "value"
+            operator: "is_truthy"
+
+  - name: "Sale Order - Reject workflow"
+    steps:
+      - step: "Get default sale order type"
+        action: "ref"
+        xml_id: "ssi_sale.sale_order_type_normal"
+        save_as: "order_type"
+
+      - step: "Create partner for reject test"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Test Customer Reject"
+          customer_rank: 1
+
+      - step: "Create sale order for reject test"
+        action: "create"
+        model: "sale.order"
+        save_as: "order"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "EVAL: registry['partner'].id"
+          type_id: "EVAL: registry['order_type'].id"
+
+      - step: "Confirm sale order"
+        action: "call"
+        target: "order"
+        method: "action_confirm_custom"
+        as_user: "base.user_admin"
+        asserts:
+          state:
+            type: "value"
+            expected: "confirm"
+
+      - step: "Invalidate cache after confirm"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Reject sale order"
+        action: "call"
+        target: "order"
+        method: "action_reject_approval"
+        as_user: "base.user_admin"
+
+      - step: "Invalidate cache after reject"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Assert sale order is rejected"
+        action: "assert"
+        target: "order"
+        asserts:
+          state:
+            type: "value"
+            expected: "reject"
+
+  - name: "Sale Order - Cancel and reset to draft workflow"
+    steps:
+      - step: "Get default sale order type"
+        action: "ref"
+        xml_id: "ssi_sale.sale_order_type_normal"
+        save_as: "order_type"
+
+      - step: "Create partner for cancel test"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Test Customer Cancel"
+          customer_rank: 1
+
+      - step: "Create sale order for cancel test"
+        action: "create"
+        model: "sale.order"
+        save_as: "order"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "EVAL: registry['partner'].id"
+          type_id: "EVAL: registry['order_type'].id"
+
+      - step: "Assert state draft"
+        action: "assert"
+        target: "order"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+      - step: "Cancel sale order from draft"
+        action: "call"
+        target: "order"
+        method: "action_cancel"
+        as_user: "base.user_admin"
+        context:
+          bypass_policy_check: true
+
+      - step: "Invalidate cache after cancel"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Assert sale order is cancelled"
+        action: "assert"
+        target: "order"
+        asserts:
+          state:
+            type: "value"
+            expected: "cancel"
+
+      - step: "Reset sale order to draft"
+        action: "call"
+        target: "order"
+        method: "action_draft"
+        as_user: "base.user_admin"
+        context:
+          bypass_policy_check: true
+
+      - step: "Invalidate cache after reset"
+        action: "call"
+        target: "order"
+        method: "invalidate_cache"
+
+      - step: "Assert sale order back to draft"
+        action: "assert"
+        target: "order"
+        asserts:
+          state:
+            type: "value"
+            expected: "draft"
+
+  - name: "Sale Order - Recompute qty helper and computed fields"
+    steps:
+      - step: "Get default sale order type"
+        action: "ref"
+        xml_id: "ssi_sale.sale_order_type_normal"
+        save_as: "order_type"
+
+      - step: "Create partner"
+        action: "create"
+        model: "res.partner"
+        save_as: "partner"
+        values:
+          name: "Test Customer Recompute"
+          customer_rank: 1
+
+      - step: "Create product category"
+        action: "search"
+        model: "product.category"
+        domain:
+          - ["name", "=", "All"]
+        save_as: "product_category"
+        limit: 1
+
+      - step: "Create product for order lines"
+        action: "create"
+        model: "product.product"
+        save_as: "product"
+        values:
+          name: "Test Product Sale"
+          type: "consu"
+          list_price: 100.0
+          standard_price: 60.0
+
+      - step: "Create sale order with order lines"
+        action: "create"
+        model: "sale.order"
+        save_as: "order"
+        as_user: "base.user_admin"
+        values:
+          partner_id: "EVAL: registry['partner'].id"
+          type_id: "EVAL: registry['order_type'].id"
+
+      - step: "Create order line"
+        action: "create"
+        model: "sale.order.line"
+        save_as: "order_line"
+        values:
+          order_id: "EVAL: registry['order'].id"
+          product_id: "EVAL: registry['product'].id"
+          product_uom_qty: 2.0
+          price_unit: 100.0
+
+      - step: "Assert total qty computed"
+        action: "assert"
+        target: "order"
+        asserts:
+          total_qty:
+            type: "value"
+            expected: 2.0
+
+      - step: "Call recompute qty helper"
+        action: "call"
+        target: "order"
+        method: "action_recompute_qty_helper"
+        as_user: "base.user_admin"
+
+      - step: "Assert computed fields after recompute"
+        action: "assert"
+        target: "order"
+        asserts:
+          total_qty:
+            type: "value"
+            expected: 2.0
+          qty_invoiced:
+            type: "value"
+            expected: 0.0
+          qty_delivered:
+            type: "value"
+            expected: 0.0
