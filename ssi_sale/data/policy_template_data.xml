@@ -278,19 +278,19 @@ if document.approval_template_id:
     <field name="restrict_additional" eval="0" />
 </record>
 <record
-            id="policy_template_sale_order_recalculate_price"
-            model="policy.template_detail"
-        >
+        id="policy_template_sale_order_recalculate_price"
+        model="policy.template_detail"
+    >
     <field name="template_id" ref="policy_template_sale_order" />
     <field
-                name="field_id"
-                search="[('model_id.model','=','sale.order'),('name','=','recalculate_price_ok')]"
-            />
+            name="field_id"
+            search="[('model_id.model','=','sale.order'),('name','=','recalculate_price_ok')]"
+        />
     <field name="restrict_state" eval="1" />
     <field
-                name="state_ids"
-                search="[('field_id.model_id.model','=','sale.order'),('value','in',['draft','sent'])]"
-            />
+            name="state_ids"
+            search="[('field_id.model_id.model','=','sale.order'),('value','in',['draft','sent'])]"
+        />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
     <field name="group_ids" eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]" />
@@ -299,14 +299,14 @@ if document.approval_template_id:
 <record id="policy_template_sale_order_recalculate_name" model="policy.template_detail">
     <field name="template_id" ref="policy_template_sale_order" />
     <field
-                name="field_id"
-                search="[('model_id.model','=','sale.order'),('name','=','recalculate_name_ok')]"
-            />
+            name="field_id"
+            search="[('model_id.model','=','sale.order'),('name','=','recalculate_name_ok')]"
+        />
     <field name="restrict_state" eval="1" />
     <field
-                name="state_ids"
-                search="[('field_id.model_id.model','=','sale.order'),('value','in',['draft','sent'])]"
-            />
+            name="state_ids"
+            search="[('field_id.model_id.model','=','sale.order'),('value','in',['draft','sent'])]"
+        />
     <field name="restrict_user" eval="1" />
     <field name="computation_method">use_group</field>
     <field name="group_ids" eval="[(6,0,[ref('ssi_sale.sale_order_user_group')])]" />
