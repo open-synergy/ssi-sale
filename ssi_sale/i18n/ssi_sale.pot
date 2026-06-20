@@ -277,6 +277,11 @@ msgid "Domain"
 msgstr ""
 
 #. module: ssi_sale
+#: model_terms:ir.ui.view,arch_db:ssi_sale.sale_order_type_view_search
+msgid "Domain Selection"
+msgstr ""
+
+#. module: ssi_sale
 #: model:ir.model.fields,field_description:ssi_sale.field_sale_order_type__message_follower_ids
 msgid "Followers"
 msgstr ""
@@ -361,6 +366,11 @@ msgstr ""
 #. module: ssi_sale
 #: model:ir.model.fields.selection,name:ssi_sale.selection__sale_order_type__pricelist_selection_method__manual
 msgid "Manual"
+msgstr ""
+
+#. module: ssi_sale
+#: model_terms:ir.ui.view,arch_db:ssi_sale.sale_order_type_view_search
+msgid "Manual Selection"
 msgstr ""
 
 #. module: ssi_sale
@@ -545,6 +555,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:ssi_sale.selection__sale_order_type__pricelist_selection_method__code
 #: model_terms:ir.ui.view,arch_db:ssi_sale.sale_order_type_view_form
 msgid "Python Code"
+msgstr ""
+
+#. module: ssi_sale
+#: model_terms:ir.ui.view,arch_db:ssi_sale.sale_order_type_view_search
+msgid "Python Code Selection"
 msgstr ""
 
 #. module: ssi_sale
