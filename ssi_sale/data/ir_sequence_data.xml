@@ -2,8 +2,7 @@
 <!-- Copyright 2024 OpenSynergy Indonesia
      Copyright 2024 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3.0) -->
-<odoo>
-<data noupdate="1">
+<odoo noupdate="1">
 <record id="sequence_sale_order" model="ir.sequence">
     <field name="name">Sale Order</field>
     <field name="code">sale.order</field>
@@ -14,5 +13,4 @@
     <field name="use_date_range" eval="1" />
     <field eval="False" name="company_id" />
 </record>
-</data>
 </odoo>

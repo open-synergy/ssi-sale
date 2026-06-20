@@ -14,6 +14,24 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <data>
+                <xpath expr="//search" position="inside">
+                    <separator />
+                    <filter
+                        name="dom_method_manual"
+                        string="Manual Selection"
+                        domain="[('pricelist_selection_method','=','manual')]"
+                    />
+                    <filter
+                        name="dom_method_domain"
+                        string="Domain Selection"
+                        domain="[('pricelist_selection_method','=','domain')]"
+                    />
+                    <filter
+                        name="dom_method_code"
+                        string="Python Code Selection"
+                        domain="[('pricelist_selection_method','=','code')]"
+                    />
+                </xpath>
             </data>
         </field>
     </record>

@@ -1,0 +1,75 @@
+scenarios:
+  - name: "Sale Order Type - Create and verify master data"
+    steps:
+      - step: "Create sale order type"
+        action: "create"
+        model: "sale_order_type"
+        save_as: "order_type"
+        values:
+          name: "Test Sale Order Type"
+          code: "TST001"
+          pricelist_selection_method: "domain"
+          pricelist_domain: "[]"
+
+      - step: "Assert sale order type created"
+        action: "assert"
+        target: "order_type"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          name:
+            type: "value"
+            expected: "Test Sale Order Type"
+          code:
+            type: "value"
+            expected: "TST001"
+          pricelist_selection_method:
+            type: "value"
+            expected: "domain"
+
+  - name: "Sale Order Type - Update and verify"
+    steps:
+      - step: "Create sale order type to update"
+        action: "create"
+        model: "sale_order_type"
+        save_as: "order_type"
+        values:
+          name: "Type Before Update"
+          code: "TBU001"
+
+      - step: "Update sale order type"
+        action: "write"
+        target: "order_type"
+        values:
+          name: "Type After Update"
+          pricelist_selection_method: "manual"
+
+      - step: "Assert sale order type updated"
+        action: "assert"
+        target: "order_type"
+        asserts:
+          name:
+            type: "value"
+            expected: "Type After Update"
+          pricelist_selection_method:
+            type: "value"
+            expected: "manual"
+
+  - name: "Sale Order Type - Use existing default type"
+    steps:
+      - step: "Get existing default sale order type"
+        action: "ref"
+        xml_id: "ssi_sale.sale_order_type_normal"
+        save_as: "default_type"
+
+      - step: "Assert default type exists"
+        action: "assert"
+        target: "default_type"
+        asserts:
+          id:
+            type: "value"
+            operator: "is_truthy"
+          code:
+            type: "value"
+            expected: "T0001"
